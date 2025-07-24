@@ -1,4 +1,57 @@
-// El principal objetivo de este desafío es fortalecer tus habilidades en lógica de programación. Aquí deberás desarrollar la lógica para resolver el problema.
+¡Entendido! Vamos a modificar el código JavaScript para que el sorteo elija un único amigo secreto de la lista y lo muestre con el texto que indicaste.
+
+Aquí tienes el código app.js modificado, junto con el HTML completo para que tengas todo junto:
+
+index.html (Tu archivo HTML)
+HTML
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;400;700;900&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <title>Amigo Secreto</title>
+</head>
+
+<body>
+    <main class="main-content">
+        <header class="header-banner">
+            <h1 class="main-title">Amigo Secreto</h1>
+            <img src="assets/amigo-secreto.png" alt="Imagen representativa de amigo secreto">
+        </header>
+
+        <section class="input-section">
+            <h2 class="section-title">Digite el nombre de sus amigos</h2>
+            <div class="input-wrapper">
+                <input type="text" id="amigo" class="input-name" placeholder="Escribe un nombre">
+                <button class="button-add" onclick="agregarAmigo()">Añadir</button>
+            </div>
+
+            <ul id="listaAmigos" class="name-list" aria-labelledby="listaAmigos" role="list"></ul>
+            <ul id="resultado" class="result-list" aria-live="polite"></ul>
+
+            <div class="button-container">
+                <button class="button-draw" onclick="sortearAmigo()" aria-label="Sortear amigo secreto">
+                    <img src="assets/play_circle_outline.png" alt="Ícono para sortear">
+                    Sortear amigo
+                </button>
+                <button class="button-clear" onclick="reiniciar()" aria-label="Reiniciar sorteo">
+                    Reiniciar
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js" defer></script>
+</body>
+</html>
+app.js (Tu archivo JavaScript modificado)
+JavaScript
+
 let amigos = []; // Array para almacenar los nombres de los amigos
 
 /**
@@ -41,37 +94,34 @@ function agregarAmigo() {
 }
 
 /**
- * Realiza el sorteo de amigo secreto.
- * Valida que haya suficientes participantes y luego mezcla la lista.
- * Muestra el resultado del sorteo en la página.
+ * Realiza el sorteo de UN único amigo secreto.
+ * Valida que haya al menos un participante.
+ * Muestra el nombre del amigo secreto sorteado en la página.
  */
 function sortearAmigo() {
-    // Validación: Necesitas al menos dos amigos para realizar un sorteo
-    if (amigos.length < 2) {
-        alert('Necesitas al menos dos amigos para realizar un sorteo.');
+    // Validación: Necesitas al menos un amigo para realizar un sorteo individual
+    if (amigos.length === 0) {
+        alert('Necesitas agregar al menos un amigo para realizar un sorteo.');
         return;
     }
 
-    embaralhar(amigos); // Mezclamos la lista de amigos aleatoriamente usando el algoritmo de Fisher-Yates
     let resultadoElement = document.getElementById('resultado');
-    resultadoElement.innerHTML = ''; // Limpiamos resultados anteriores antes de mostrar los nuevos
+    resultadoElement.innerHTML = ''; // Limpiamos resultados anteriores
 
-    // Genera y muestra los pares de amigo secreto
-    for (let i = 0; i < amigos.length; i++) {
-        // Asigna a cada amigo el siguiente en la lista mezclada.
-        // El operador % (módulo) asegura que el último amigo le dé al primero, cerrando el círculo.
-        let sorteado = amigos[(i + 1) % amigos.length];
+    // Selecciona un índice aleatorio del array de amigos
+    let indiceAleatorio = Math.floor(Math.random() * amigos.length);
+    let amigoSecretoSorteado = amigos[indiceAleatorio];
 
-        // Crea un elemento de lista (<li>) para cada resultado y lo añade a la lista de resultados
-        let itemLista = document.createElement('li');
-        itemLista.classList.add('result-item'); // Agrega una clase para posibles estilos CSS
-        itemLista.textContent = amigos[i] + ' --> ' + sorteado; // Formato "Amigo --> Sorteado"
-        resultadoElement.appendChild(itemLista);
-    }
+    // Crea un elemento de lista (<li>) para mostrar el resultado
+    let itemLista = document.createElement('li');
+    itemLista.classList.add('result-item'); // Agrega una clase para posibles estilos CSS
+    itemLista.textContent = 'El amigo secreto sorteado es: ' + amigoSecretoSorteado;
+    resultadoElement.appendChild(itemLista);
 }
 
 /**
  * Función auxiliar para mezclar un array utilizando el algoritmo de Fisher-Yates.
+ * (Aunque no se usa en esta versión de sorteo individual, se mantiene por si se reutiliza).
  * Modifica el array original en su lugar.
  * @param {Array} lista - El array a mezclar.
  */
